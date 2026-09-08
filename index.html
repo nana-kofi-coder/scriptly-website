@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scriptly — Say it right, every time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2A3A;
+    --paper:#F1ECDE;
+    --paper-white:#FBF9F3;
+    --wax:#B4432E;
+    --sage:#4C6444;
+    --line: rgba(30,42,58,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3, .serif{ font-family:'Newsreader', serif; font-weight:500; }
+  a{color:inherit;}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 28px;}
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(241,236,222,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:68px;}
+  .brand{font-family:'Newsreader', serif; font-size:1.4rem; font-weight:600; letter-spacing:0.2px;}
+  .brand span{color:var(--wax);}
+  nav ul{list-style:none; display:flex; gap:28px; font-size:0.95rem;}
+  nav a{text-decoration:none; opacity:0.8;}
+  nav a:hover{opacity:1;}
+  .nav-cta{
+    background:var(--ink); color:var(--paper-white);
+    padding:9px 18px; border-radius:3px; font-size:0.9rem;
+  }
+
+  /* HERO */
+  .hero{padding:86px 0 70px;}
+  .hero .wrap{display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;}
+  .eyebrow-line{
+    width:40px; height:2px; background:var(--wax); margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:3.1rem; line-height:1.12; letter-spacing:-0.01em;
+    max-width:11.5ch;
+  }
+  .hero p.lede{
+    margin-top:22px; font-size:1.15rem; max-width:46ch; color:#3A4756;
+  }
+  .hero .actions{margin-top:32px; display:flex; gap:16px; align-items:center;}
+  .btn{
+    display:inline-block; padding:13px 26px; border-radius:3px;
+    font-size:0.98rem; text-decoration:none; font-weight:500;
+    border:1px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--wax); color:var(--paper-white);}
+  .btn-primary:hover{background:#9c3a27;}
+  .btn-ghost{border-color:var(--ink); color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink); color:var(--paper-white);}
+
+  /* letter illustration */
+  .letter-art{position:relative; height:340px;}
+  .sheet{
+    position:absolute; background:var(--paper-white);
+    border:1px solid var(--line); box-shadow:0 10px 24px rgba(30,42,58,0.10);
+    border-radius:2px;
+  }
+  .sheet.back{ width:78%; height:82%; top:26px; left:34px; transform:rotate(-6deg); }
+  .sheet.front{ width:78%; height:82%; top:4px; left:8px; transform:rotate(3deg); padding:26px 24px;}
+  .sheet.front .rule{height:1px; background:var(--line); margin:14px 0;}
+  .sheet.front .rule:nth-child(1){width:90%;}
+  .sheet.front .rule:nth-child(2){width:70%;}
+  .sheet.front .rule:nth-child(3){width:82%;}
+  .sheet.front .sig{
+    margin-top:22px; font-family:'Newsreader', serif; font-style:italic;
+    font-size:1.3rem; color:var(--wax);
+  }
+  .seal{
+    position:absolute; bottom:18px; right:2px; width:46px; height:46px;
+    background:var(--wax); border-radius:50%; color:var(--paper-white);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Newsreader', serif; font-size:1.2rem; box-shadow:0 4px 10px rgba(180,67,46,0.4);
+  }
+
+  /* SECTION HEADERS */
+  section{padding:64px 0;}
+  .section-head{max-width:56ch; margin-bottom:44px;}
+  .section-head h2{font-size:2.1rem;}
+  .section-head p{margin-top:12px; color:#3A4756; font-size:1.05rem;}
+
+  /* HOW IT WORKS */
+  .how{background:var(--paper-white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:34px;}
+  .step{border-left:2px solid var(--line); padding-left:20px;}
+  .step .num{font-family:'Newsreader', serif; font-style:italic; color:var(--wax); font-size:1.6rem;}
+  .step h3{margin-top:8px; font-size:1.2rem;}
+  .step p{margin-top:8px; color:#3A4756; font-size:0.98rem;}
+
+  /* INTAKE FORM (mock) */
+  .intake .wrap{display:grid; grid-template-columns:0.9fr 1.1fr; gap:52px;}
+  .form-card{
+    background:var(--paper-white); border:1px solid var(--line); border-radius:4px;
+    padding:30px; box-shadow:0 6px 18px rgba(30,42,58,0.06);
+  }
+  .form-card label{display:block; font-size:0.85rem; margin-bottom:6px; color:#3A4756;}
+  .form-card input, .form-card select, .form-card textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:3px;
+    font-family:inherit; font-size:0.95rem; background:#fff; margin-bottom:18px;
+  }
+  .form-card textarea{min-height:90px; resize:vertical;}
+  .hidden{display:none !important;}
+  .agent-error{color:var(--wax); font-size:0.85rem; margin-bottom:14px;}
+  .agent-hint{color:#6b7686; font-size:0.85rem; margin:-10px 0 16px;}
+  .agent-draft-box{
+    white-space:pre-wrap; background:var(--paper); border:1px solid var(--line); border-radius:4px;
+    padding:20px; font-size:0.94rem; line-height:1.65; max-height:440px; overflow-y:auto;
+  }
+  #resultCard{grid-column:1 / -1;}
+
+  /* AD SLOT */
+  .ad-slot{padding:18px 28px 0;}
+  .ad-slot-inner{
+    border:1px dashed var(--line); border-radius:4px; padding:14px 18px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    font-size:0.85rem; color:#6b7686; background:rgba(251,249,243,0.5);
+  }
+  .ad-tag{
+    text-transform:uppercase; letter-spacing:0.06em; font-size:0.68rem;
+    border:1px solid var(--line); border-radius:2px; padding:2px 6px; color:#8a94a3;
+  }
+  .ad-copy a{color:var(--wax); text-decoration:underline;}
+
+  /* ADVERTISE WITH US */
+  .advertise{background:var(--paper-white); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .advertise-box{
+    display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .advertise-box p{color:#3A4756; font-size:0.98rem; max-width:52ch;}
+  .consent{display:flex; gap:10px; align-items:flex-start; font-size:0.88rem; color:#3A4756; margin-bottom:20px;}
+  .consent input{width:auto; margin-top:3px;}
+
+  /* PRICING */
+  .currency-toggle{display:inline-flex; border:1px solid var(--line); border-radius:4px; overflow:hidden; margin-bottom:10px;}
+  .curr-btn{
+    padding:9px 16px; border:none; background:var(--paper-white); font-family:inherit;
+    font-size:0.88rem; cursor:pointer; color:var(--ink);
+  }
+  .curr-btn.active{background:var(--ink); color:var(--paper-white);}
+  .currency-note{font-size:0.82rem; color:#6b7686; margin-bottom:26px;}
+  .convert-note{font-size:0.82rem; color:#6b7686; margin:2px 0 14px;}
+  .pricing-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  .plan{
+    background:var(--paper-white); border:1px solid var(--line); border-radius:4px; padding:28px;
+    display:flex; flex-direction:column;
+  }
+  .plan.featured{border-color:var(--wax); box-shadow:0 8px 20px rgba(180,67,46,0.12); position:relative;}
+  .plan.featured::before{
+    content:"Most popular"; position:absolute; top:-12px; left:24px;
+    background:var(--wax); color:var(--paper-white); font-size:0.72rem;
+    padding:4px 10px; border-radius:2px; letter-spacing:0.3px;
+  }
+  .plan h3{font-size:1.15rem;}
+  .plan .price{font-family:'Newsreader', serif; font-size:2.3rem; margin:14px 0 4px;}
+  .plan .price span{font-size:1rem; font-family:'Work Sans', sans-serif; color:#3A4756;}
+  .plan ul{list-style:none; margin:18px 0 24px; font-size:0.92rem; color:#3A4756;}
+  .plan li{padding:6px 0; border-top:1px solid var(--line);}
+  .plan li:first-child{border-top:none;}
+  .plan .btn{margin-top:auto; text-align:center;}
+
+  /* LEGAL */
+  .legal{background:var(--paper-white); border-top:1px solid var(--line);}
+  .legal-tabs{display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
+  .legal-tab{
+    padding:9px 16px; border:1px solid var(--line); border-radius:3px;
+    background:transparent; font-family:inherit; font-size:0.9rem; cursor:pointer;
+  }
+  .legal-tab.active{background:var(--ink); color:var(--paper-white); border-color:var(--ink);}
+  .legal-doc{display:none; max-width:72ch;}
+  .legal-doc.active{display:block;}
+  .legal-doc h4{font-size:1.05rem; margin-top:26px; margin-bottom:8px;}
+  .legal-doc h4:first-of-type{margin-top:0;}
+  .legal-doc p, .legal-doc li{font-size:0.94rem; color:#3A4756; margin-bottom:10px;}
+  .legal-doc ul{padding-left:20px; margin-bottom:14px;}
+  .legal-meta{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);
+  }
+  .legal-meta .note{font-size:0.85rem; color:#6b7686; max-width:40ch;}
+  .download-link{
+    font-size:0.88rem; text-decoration:underline; color:var(--wax);
+  }
+
+  footer{padding:40px 0; text-align:center; color:#6b7686; font-size:0.85rem;}
+  footer a{text-decoration:underline;}
+
+  @media (max-width: 820px){
+    .hero .wrap, .intake .wrap{grid-template-columns:1fr;}
+    .steps, .pricing-grid{grid-template-columns:1fr;}
+    nav ul{display:none;}
+    .hero h1{font-size:2.3rem;}
+    .letter-art{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Script<span>ly</span></div>
+    <ul>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#try">Try it</a></li>
+      <li><a href="#advertise">Advertise</a></li>
+      <li><a href="#legal">Legal</a></li>
+    </ul>
+    <a href="#try" class="nav-cta">Get started</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow-line"></div>
+      <h1>Whatever you need to say, we help you say it well.</h1>
+      <p class="lede">Emails, letters, resumes, speeches, hard conversations — tell us what you're facing, and get a personalized draft back in your voice, ready to send.</p>
+      <div class="actions">
+        <a href="#try" class="btn btn-primary">Start writing</a>
+        <a href="#pricing" class="btn btn-ghost">See pricing</a>
+      </div>
+    </div>
+    <div class="letter-art">
+      <div class="sheet back"></div>
+      <div class="sheet front">
+        <div class="rule"></div>
+        <div class="rule"></div>
+        <div class="rule"></div>
+        <div class="sig">— Scriptly</div>
+      </div>
+      <div class="seal">S</div>
+    </div>
+  </div>
+</header>
+
+<div class="ad-slot wrap">
+  <div class="ad-slot-inner">
+    <span class="ad-tag">Advertisement</span>
+    <span class="ad-copy">Your brand could be here — <a href="#advertise">advertise with Scriptly</a></span>
+  </div>
+</div>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Three steps, start to finish</h2>
+      <p>No writing experience needed on your end — just tell us what's going on.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Tell us what you need</h3>
+        <p>Fill in a short form: what it's for, who it's to, and the tone you want.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>We draft it</h3>
+        <p>Your piece is written and checked, then delivered to your account.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Revise & send</h3>
+        <p>Request changes until it sounds like you, then it's yours to use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="intake" id="try">
+  <div class="wrap">
+    <div id="tryIntro">
+      <div class="section-head">
+        <h2>Request a draft</h2>
+        <p>Tell us what you need — this actually writes it for you.</p>
+      </div>
+      <p style="color:#3A4756; font-size:0.95rem;">You can revise the result as many times as you like once it's back. Attaching a supporting document or photo is optional.</p>
+    </div>
+
+    <div class="form-card" id="formCard">
+      <div id="formError" class="agent-error hidden"></div>
+
+      <label for="custName">Your name</label>
+      <input type="text" id="custName" placeholder="How should this be signed or addressed?">
+
+      <label for="type">What are you writing?</label>
+      <select id="type">
+        <option>Email</option>
+        <option>Letter</option>
+        <option>Resume / CV</option>
+        <option>Speech</option>
+        <option>Essay</option>
+        <option>Something else</option>
+      </select>
+
+      <label for="tone">Tone</label>
+      <select id="tone">
+        <option>Formal</option>
+        <option>Friendly</option>
+        <option>Direct</option>
+        <option>Warm & personal</option>
+      </select>
+
+      <label for="details">Tell us the situation</label>
+      <textarea id="details" placeholder="Who is this for, and what do you want it to achieve?"></textarea>
+
+      <label for="fileUpload">Attach a supporting document (optional)</label>
+      <input type="file" id="fileUpload" accept=".txt,.pdf,.doc,.docx" multiple>
+      <div id="fileHint" class="agent-hint hidden"></div>
+
+      <label for="photoUpload">Attach a photo (optional — shown alongside your draft)</label>
+      <input type="file" id="photoUpload" accept="image/*">
+      <div id="photoPreviewWrap" class="hidden" style="margin-bottom:18px;">
+        <img id="photoPreview" style="max-width:100px; border-radius:4px; border:1px solid var(--line);">
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="consent">
+        <label for="consent" style="margin:0;">I agree Scriptly can save this submission and my draft after delivery, as described in the Privacy Policy.</label>
+      </div>
+
+      <button type="button" id="submitBtn" class="btn btn-primary" style="width:100%; border:none;">Submit request</button>
+    </div>
+
+    <div class="form-card hidden" id="resultCard" style="grid-column:1 / -1;">
+      <div id="draftPhotoWrap" class="hidden" style="margin-bottom:14px;">
+        <img id="draftPhoto" style="max-width:100px; border-radius:4px; border:1px solid var(--line);">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px;">
+        <button type="button" id="copyBtn" class="btn btn-ghost" style="padding:8px 16px; font-size:0.85rem;">Copy</button>
+        <button type="button" id="newBtn" class="btn btn-ghost" style="padding:8px 16px; font-size:0.85rem;">New request</button>
+      </div>
+      <div id="draftBox" class="agent-draft-box"></div>
+
+      <div style="margin-top:22px; padding-top:20px; border-top:1px solid var(--line);">
+        <p style="color:#3A4756; font-size:0.9rem; margin-bottom:10px;">Want something changed? Describe it below.</p>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="revisionInput" placeholder="e.g. Make it shorter, or add a line about the deadline" style="flex:1;">
+          <button type="button" id="reviseBtn" class="btn btn-primary" style="border:none; padding:0 20px;">Send</button>
+        </div>
+        <div id="reviseError" class="agent-error hidden"></div>
+        <div id="reviseHint" class="agent-hint hidden">Revising…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="advertise" id="advertise">
+  <div class="wrap advertise-box">
+    <div>
+      <h2 class="serif" style="font-size:1.7rem; margin-bottom:8px;">Advertise with Scriptly</h2>
+      <p>Scriptly is free for everyone to use, supported by advertising. If your business wants to reach people actively writing emails, resumes, letters, and more, get in touch.</p>
+    </div>
+    <a href="mailto:hello.scriptly@gmail.com?subject=Advertising%20on%20Scriptly" class="btn btn-primary">Contact us</a>
+  </div>
+</section>
+
+<section class="legal" id="legal">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Legal</h2>
+      <p>Read in full below, or download the Word version.</p>
+    </div>
+
+    <div class="legal-tabs">
+      <button class="legal-tab active" data-target="terms">Terms of Use</button>
+      <button class="legal-tab" data-target="privacy">Privacy Policy</button>
+    </div>
+
+    <div class="legal-doc active" id="terms">
+      <div class="legal-meta">
+        <span class="note">Effective date to be inserted before publishing. Operated from Ghana.</span>
+        <a class="download-link" href="Scriptly_Terms_of_Use.docx" download>Download .docx</a>
+      </div>
+
+      <h4>1. Acceptance of These Terms</h4>
+      <p>These Terms of Use ("Terms") govern access to and use of Scriptly, a personalized writing and communication service ("Service", "we", "us"). By creating an account, submitting a request, or otherwise using the Service, you ("Customer", "you") agree to be bound by these Terms. If you do not agree, do not use the Service.</p>
+      <p>Scriptly is operated from Ghana. These Terms are governed by the laws of Ghana, as set out in Section 11.</p>
+
+      <h4>2. Description of the Service</h4>
+      <p>Scriptly provides AI-assisted, personalized drafting of written content on request, including but not limited to emails, letters, essays, speeches, resumes, and other personal or professional communications ("Content"). A human may review submissions as part of quality control. Drafts are provided based on the information and instructions you supply and are intended as a starting point for your own use, not as professional, legal, medical, financial, or academic advice.</p>
+      <p>The Service is currently offered free of charge. Scriptly reserves the right to introduce paid plans in the future with reasonable advance notice, and to display advertisements from third parties as described in Section 7.</p>
+
+      <h4>3. Eligibility and Accounts</h4>
+      <ul>
+        <li>The Service is intended for use by individuals of all ages; however, the named account holder must be at least 18 years old.</li>
+        <li>If you are under 18, a parent or legal guardian must create and hold the account on your behalf and is responsible for all activity associated with it.</li>
+        <li>You are responsible for maintaining accurate account information and safeguarding your login credentials.</li>
+      </ul>
+
+      <h4>4. Content Ownership</h4>
+      <p>Once a final draft is delivered to you, you own that draft and may use it as you see fit. Scriptly retains no ownership claim over completed Content delivered to a customer. You are responsible for reviewing and editing any draft before relying on or publishing it, and for ensuring your use of it complies with applicable law.</p>
+
+      <h4>5. Acceptable Use</h4>
+      <p>You agree not to use the Service to request Content that is illegal or fraudulent, defamatory or harassing, infringing on another's intellectual property, or intended to be passed off as someone else's original academic or professional work. We reserve the right to refuse service or terminate an account for violations of this section.</p>
+
+      <h4>6. Your Content Submissions and Privacy</h4>
+      <p>Information you submit to request a draft is handled as described in our Privacy Policy. Whether your submissions are retained after delivery depends on the consent choice you make at the time of submission.</p>
+
+      <h4>7. Advertising</h4>
+      <p>Scriptly is currently supported by advertising rather than subscription fees. The Service may display advertisements from third-party companies. Scriptly does not control the content of third-party advertisements and is not responsible for the products, services, or claims made by advertisers. Businesses interested in advertising on Scriptly may contact us using the details in Section 12.</p>
+
+      <h4>8. Disclaimer of Warranties</h4>
+      <p>The Service is provided "as is" and "as available." We do not guarantee that Content will be error-free, suitable for every purpose, or accepted by any third party. You are responsible for reviewing all Content before use.</p>
+
+      <h4>9. Limitation of Liability</h4>
+      <p>To the maximum extent permitted by law, Scriptly is not liable for indirect, incidental, or consequential damages arising from use of the Service.</p>
+
+      <h4>10. Changes to These Terms</h4>
+      <p>We may update these Terms from time to time. Material changes will be notified at least 14 days before taking effect. Continued use after changes take effect means you accept the revised Terms.</p>
+
+      <h4>11. Governing Law and Disputes</h4>
+      <p>These Terms are governed by the laws of the Republic of Ghana. Disputes will first be addressed through good-faith negotiation, and if unresolved, are subject to the exclusive jurisdiction of the courts of Ghana.</p>
+
+      <h4>12. Contact</h4>
+      <p>Questions about these Terms, or inquiries about advertising on Scriptly, can be sent to: hello.scriptly@gmail.com</p>
+    </div>
+
+    <div class="legal-doc" id="privacy">
+      <div class="legal-meta">
+        <span class="note">Effective date to be inserted before publishing. Operated from Ghana.</span>
+        <a class="download-link" href="Scriptly_Privacy_Policy.docx" download>Download .docx</a>
+      </div>
+
+      <h4>1. Introduction</h4>
+      <p>This Privacy Policy explains how Scriptly ("we", "us") collects, uses, and protects information when you use our personalized writing and communication service (the "Service"). Scriptly is operated from Ghana. By using the Service, you agree to the practices described here.</p>
+
+      <h4>2. Information We Collect</h4>
+      <ul>
+        <li>Account information: name and email address.</li>
+        <li>Submission content: the text, instructions, and any personal details you provide when requesting a piece of writing.</li>
+        <li>Usage information: basic technical data such as device type and how you interact with the Service.</li>
+      </ul>
+
+      <h4>3. How We Use Your Information</h4>
+      <ul>
+        <li>To generate and deliver the written Content you request;</li>
+        <li>To manage your account;</li>
+        <li>To communicate with you about your requests or your account;</li>
+        <li>To improve the quality and reliability of the Service.</li>
+      </ul>
+
+      <h4>4. Consent-Based Storage of Submissions</h4>
+      <p>At the time of each submission, you will be asked whether you consent to Scriptly retaining your submitted content and the resulting draft after delivery.</p>
+      <ul>
+        <li>If you consent, your submission and draft may be retained to provide revisions, support your account history, and improve the Service.</li>
+        <li>If you do not consent, your submission and draft are deleted from our active systems once the final Content has been delivered, other than minimal billing records.</li>
+      </ul>
+      <p>You may withdraw consent for future submissions at any time, and may request deletion of previously retained submissions.</p>
+
+      <h4>5. How We Share Information</h4>
+      <p>We do not sell your personal information or submission content to third parties. We may share information with service providers who help operate the Service (such as hosting providers), or with authorities where required by law.</p>
+
+      <h4>6. Advertising</h4>
+      <p>Scriptly is currently supported by advertising rather than subscription fees. Advertisements on the Service may be provided by third-party advertising partners, who may use cookies or similar technologies to deliver and measure ads. Scriptly does not control these third parties' data practices; please review their own privacy policies for details. We do not share your submission content with advertisers.</p>
+
+      <h4>7. Your Rights</h4>
+      <p>Depending on your location, you may have the right to access, correct, or request deletion of your personal information, and to withdraw consent for data retention. Contact us using the details in Section 10 to exercise these rights.</p>
+
+      <h4>8. Data Security</h4>
+      <p>We use reasonable technical and organizational measures to protect your information. No method of transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
+
+      <h4>9. Children and Minors</h4>
+      <p>The Service may be used by individuals of all ages, but the account holder must be at least 18, or a parent or guardian must hold the account on a minor's behalf. Where a minor uses the Service through a guardian's account, the guardian is responsible for reviewing this Policy and any information submitted.</p>
+
+      <h4>10. Changes to This Policy and Contact</h4>
+      <p>We may update this Privacy Policy from time to time; material changes will be notified through the Service or by email. For questions or requests, contact: hello.scriptly@gmail.com</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    &copy; <span id="year"></span> Scriptly. Operated from Ghana. &nbsp;·&nbsp;
+    <a href="#legal">Terms of Use</a> &nbsp;·&nbsp; <a href="#legal">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  document.getElementById('mockForm')?.addEventListener('submit', function(e){
+    e.preventDefault();
+  });
+
+  // --- Scriptly writing agent ---
+  (function(){
+    let conversation = [];
+    let uploadedFileText = "";
+    let uploadedFileNames = [];
+    let uploadedPhotoDataUrl = "";
+
+    const formCard = document.getElementById('formCard');
+    const resultCard = document.getElementById('resultCard');
+    const tryIntro = document.getElementById('tryIntro');
+    const draftBox = document.getElementById('draftBox');
+    const formError = document.getElementById('formError');
+    const reviseError = document.getElementById('reviseError');
+    const reviseHint = document.getElementById('reviseHint');
+    const submitBtn = document.getElementById('submitBtn');
+    const reviseBtn = document.getElementById('reviseBtn');
+    const fileHint = document.getElementById('fileHint');
+    const photoPreview = document.getElementById('photoPreview');
+    const photoPreviewWrap = document.getElementById('photoPreviewWrap');
+    const draftPhotoWrap = document.getElementById('draftPhotoWrap');
+    const draftPhoto = document.getElementById('draftPhoto');
+
+    document.getElementById('fileUpload').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files);
+      uploadedFileNames = files.map(f => f.name);
+      uploadedFileText = "";
+      let readableCount = 0;
+
+      for (const file of files) {
+        if (file.type === "text/plain" || file.name.endsWith(".txt")) {
+          const text = await file.text();
+          uploadedFileText += `\n\n--- Content from ${file.name} ---\n${text}`;
+          readableCount++;
+        }
+      }
+
+      if (files.length) {
+        let msg = `Attached: ${uploadedFileNames.join(", ")}.`;
+        if (readableCount < files.length) {
+          msg += " Only .txt files are read directly here — PDF/Word content isn't extracted in this version.";
+        }
+        fileHint.textContent = msg;
+        fileHint.classList.remove('hidden');
+      } else {
+        fileHint.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('photoUpload').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) { uploadedPhotoDataUrl = ""; photoPreviewWrap.classList.add('hidden'); return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        uploadedPhotoDataUrl = ev.target.result;
+        photoPreview.src = uploadedPhotoDataUrl;
+        photoPreviewWrap.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    async function callAgent(messages) {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          messages: messages
+        })
+      });
+      if (!response.ok) throw new Error("Request failed");
+      const data = await response.json();
+      const text = (data.content || [])
+        .filter(b => b.type === "text")
+        .map(b => b.text)
+        .join("\n")
+        .trim();
+      if (!text) throw new Error("No draft returned");
+      return text;
+    }
+
+    submitBtn.addEventListener('click', async () => {
+      formError.classList.add('hidden');
+      const custName = document.getElementById('custName').value.trim();
+      const type = document.getElementById('type').value;
+      const tone = document.getElementById('tone').value;
+      const details = document.getElementById('details').value.trim();
+      const consent = document.getElementById('consent').checked;
+
+      if (!details) {
+        formError.textContent = "Tell us a bit about the situation before submitting.";
+        formError.classList.remove('hidden');
+        return;
+      }
+      if (!consent) {
+        formError.textContent = "Please confirm the consent checkbox to continue.";
+        formError.classList.remove('hidden');
+        return;
+      }
+
+      let prompt = `You are Scriptly, a personal writing assistant. A customer has requested help writing a piece of content.
+
+Customer's name: ${custName || "(not provided)"}
+Type of writing: ${type}
+Desired tone: ${tone}
+Situation and details from the customer: ${details}`;
+
+      if (uploadedFileText) {
+        prompt += `\n\nThe customer also attached supporting document content to use as reference:${uploadedFileText}`;
+      } else if (uploadedFileNames.length) {
+        prompt += `\n\nThe customer attached file(s) named: ${uploadedFileNames.join(", ")}. Their content could not be read in this preview — write based on the details provided above.`;
+      }
+
+      prompt += `\n\nWrite the complete piece for them, ready to use, signed or addressed with their name where appropriate. Match the requested tone throughout. Return ONLY the finished written piece — no preamble, no notes, no explanation of what you did.`;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Writing your draft…";
+
+      try {
+        conversation = [{ role: "user", content: prompt }];
+        const result = await callAgent(conversation);
+        conversation.push({ role: "assistant", content: result });
+        draftBox.textContent = result;
+        if (uploadedPhotoDataUrl) {
+          draftPhoto.src = uploadedPhotoDataUrl;
+          draftPhotoWrap.classList.remove('hidden');
+        } else {
+          draftPhotoWrap.classList.add('hidden');
+        }
+        tryIntro.classList.add('hidden');
+        formCard.classList.add('hidden');
+        resultCard.classList.remove('hidden');
+      } catch (e) {
+        formError.textContent = "Something went wrong generating your draft. Please try again.";
+        formError.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit request";
+      }
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(draftBox.textContent);
+      const btn = document.getElementById('copyBtn');
+      const original = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+
+    document.getElementById('newBtn').addEventListener('click', () => {
+      conversation = [];
+      uploadedFileText = "";
+      uploadedFileNames = [];
+      uploadedPhotoDataUrl = "";
+      document.getElementById('custName').value = "";
+      document.getElementById('details').value = "";
+      document.getElementById('consent').checked = false;
+      document.getElementById('revisionInput').value = "";
+      document.getElementById('fileUpload').value = "";
+      document.getElementById('photoUpload').value = "";
+      fileHint.classList.add('hidden');
+      photoPreviewWrap.classList.add('hidden');
+      resultCard.classList.add('hidden');
+      tryIntro.classList.remove('hidden');
+      formCard.classList.remove('hidden');
+    });
+
+    reviseBtn.addEventListener('click', async () => {
+      reviseError.classList.add('hidden');
+      const input = document.getElementById('revisionInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      conversation.push({ role: "user", content: `Please revise the draft based on this feedback: ${text}\n\nReturn ONLY the full revised piece, no preamble.` });
+      reviseHint.classList.remove('hidden');
+      reviseBtn.disabled = true;
+
+      try {
+        const result = await callAgent(conversation);
+        conversation.push({ role: "assistant", content: result });
+        draftBox.textContent = result;
+        input.value = "";
+      } catch (e) {
+        reviseError.textContent = "Something went wrong. Please try again.";
+        reviseError.classList.remove('hidden');
+      } finally {
+        reviseHint.classList.add('hidden');
+        reviseBtn.disabled = false;
+      }
+    });
+  })();
+
+  document.querySelectorAll('.legal-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.legal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.legal-doc').forEach(d => d.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+
+</script>
+
+</body>
+</html>
